@@ -1,0 +1,39 @@
+<!-- app/views/calendars/index.html.erb -->
+<h1>Google Calendars and Events</h1>
+
+<% if session[:access_token].present? %>
+  <%= button_to 'Logout', logout_path, method: :delete, class: 'button' %>
+  <% if @calendars.present? %>
+    <% @calendars.each do |calendar| %>
+      <h2><%= calendar.name %> (Timezone: <%= calendar.time_zone %>)</h2>
+      <p><%= calendar.description %></p>
+      <%next unless calendar.events.present?%>
+      <table>
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Location</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% calendar.events.each do |event| %>
+            <tr>
+              <td><%= event.summary %></td>
+              <td><%= event.start_time %></td>
+              <td><%= event.end_time %></td>
+              <td><%= event.location %></td>
+              <td><%= event.status %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  <% else %>
+    <p>No calendars or events found.</p>
+  <% end %>
+<% else %>
+  <%= button_to 'Connect with Google', google_login_path, method: :get, class: 'button' %>
+<% end %>
