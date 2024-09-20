@@ -23,21 +23,21 @@ RSpec.describe GoogleAuthService do
 
     context 'with missing credentials' do
       it 'raises an error for missing client_id' do
-        expect {
+        expect do
           described_class.new(nil, client_secret, redirect_uri)
-        }.to raise_error('Missing environment variables: GOOGLE_CLIENT_ID')
+        end.to raise_error('Missing environment variables: GOOGLE_CLIENT_ID')
       end
 
       it 'raises an error for missing client_secret' do
-        expect {
+        expect do
           described_class.new(client_id, nil, redirect_uri)
-        }.to raise_error('Missing environment variables: GOOGLE_CLIENT_SECRET')
+        end.to raise_error('Missing environment variables: GOOGLE_CLIENT_SECRET')
       end
 
       it 'raises an error for missing redirect_uri' do
-        expect {
+        expect do
           described_class.new(client_id, client_secret, nil)
-        }.to raise_error('Missing environment variables: GOOGLE_REDIRECT_URI')
+        end.to raise_error('Missing environment variables: GOOGLE_REDIRECT_URI')
       end
     end
   end
@@ -62,19 +62,23 @@ RSpec.describe GoogleAuthService do
     let(:code) { 'test-auth-code' }
     let(:refresh_token) { 'test-refresh-token' }
     let(:token_response) { { access_token: 'test-access-token', refresh_token: 'test-refresh-token' }.to_json }
-    
+
     before do
       allow(HTTParty).to receive(:post).and_return(double(success?: true, body: token_response))
     end
 
     it 'exchanges authorization code for token' do
-      expect(auth_service).to receive(:make_post_request).with('/token', hash_including(grant_type: 'authorization_code', code: code)).and_call_original
+      expect(auth_service).to receive(:make_post_request).with('/token',
+                                                               hash_including(grant_type: 'authorization_code',
+                                                                              code:)).and_call_original
       result = auth_service.exchange_code_for_token(code)
       expect(result).to eq(JSON.parse(token_response))
     end
 
     it 'refreshes the access token' do
-      expect(auth_service).to receive(:make_post_request).with('/token', hash_including(grant_type: 'refresh_token', refresh_token: refresh_token)).and_call_original
+      expect(auth_service).to receive(:make_post_request).with('/token',
+                                                               hash_including(grant_type: 'refresh_token',
+                                                                              refresh_token:)).and_call_original
       result = auth_service.refresh_access_token(refresh_token)
       expect(result).to eq(JSON.parse(token_response))
     end

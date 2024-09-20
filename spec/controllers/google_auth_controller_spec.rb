@@ -19,12 +19,12 @@ RSpec.describe GoogleAuthController, type: :controller do
       before do
         @auth_service = instance_double(GoogleAuthService)
         @import_service = instance_double(GoogleCalendarImportService)
-        
+
         allow(GoogleAuthService).to receive(:new).and_return(@auth_service)
         allow(@auth_service).to receive(:exchange_code_for_token).and_return({
-          'access_token' => 'mock_access_token',
-          'refresh_token' => 'mock_refresh_token'
-        })
+                                                                               'access_token' => 'mock_access_token',
+                                                                               'refresh_token' => 'mock_refresh_token'
+                                                                             })
         allow(GoogleCalendarImportService).to receive(:new).with('mock_access_token').and_return(@import_service)
         allow(@import_service).to receive(:import_calendars_and_events)
       end
@@ -72,7 +72,7 @@ RSpec.describe GoogleAuthController, type: :controller do
   describe 'DELETE #logout' do
     it 'clears session and redirects to root path with notice' do
       session[:access_token] = 'mock_access_token'
-      
+
       delete :logout
 
       expect(session[:access_token]).to be_nil

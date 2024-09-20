@@ -5,7 +5,7 @@ RSpec.describe NotificationsController, type: :controller do
   let(:sync_token) { 'mock_sync_token' }
   let(:access_token) { 'mock_access_token' }
   let(:google_id) { 'mock_google_id' }
-  let(:calendar) { double('Calendar', user: double('User', access_token: access_token), google_id: google_id) }
+  let(:calendar) { double('Calendar', user: double('User', access_token:), google_id:) }
 
   before do
     request.headers['X-Goog-Resource-ID'] = resource_id
@@ -15,7 +15,7 @@ RSpec.describe NotificationsController, type: :controller do
   describe 'POST #handle_google_calendar_notification' do
     context 'when the calendar is found' do
       before do
-        allow(Calendar).to receive(:find_by).with(resource_id: resource_id).and_return(calendar)
+        allow(Calendar).to receive(:find_by).with(resource_id:).and_return(calendar)
         allow(GoogleCalendarImportService).to receive_message_chain(:new, :sync_events)
       end
 
@@ -33,7 +33,7 @@ RSpec.describe NotificationsController, type: :controller do
 
     context 'when the calendar is not found' do
       before do
-        allow(Calendar).to receive(:find_by).with(resource_id: resource_id).and_return(nil)
+        allow(Calendar).to receive(:find_by).with(resource_id:).and_return(nil)
         allow(Rails.logger).to receive(:error)
       end
 

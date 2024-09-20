@@ -5,9 +5,10 @@ RSpec.describe CalendarsController, type: :controller do
     context 'when there is an access token in the session' do
       before do
         session[:access_token] = 'mock_access_token'
-        
+
         @calendar = Calendar.create!(google_id: 'mock_google_id')
-        @event = @calendar.events.create!(google_id: 'mock_event_id', summary: 'Test Event', start_time: Time.now, end_time: Time.now + 1.hour)
+        @event = @calendar.events.create!(google_id: 'mock_event_id', summary: 'Test Event', start_time: Time.now,
+                                          end_time: Time.now + 1.hour)
       end
 
       it 'assigns @calendars with calendars and their events' do
