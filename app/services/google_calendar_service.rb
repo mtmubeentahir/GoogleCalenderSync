@@ -40,7 +40,7 @@ class GoogleCalendarService
 
   # General GET request handler
   def get_request(endpoint, query = {})
-    response = HTTParty.get("#{BASE_URL}#{endpoint}", headers: auth_headers, query: query)
+    response = HTTParty.get("#{BASE_URL}#{endpoint}", headers: auth_headers, query:)
     handle_response(response, endpoint)
   end
 

@@ -6,7 +6,7 @@ class GoogleCalendarImportService
 
   def import_calendars_and_events
     calendar_list = @google_service.calendar_list
-    return Rails.logger.error("Failed to fetch calendar list") if calendar_list.nil?
+    return Rails.logger.error('Failed to fetch calendar list') if calendar_list.nil?
 
     ActiveRecord::Base.transaction do
       calendar_list['items'].each do |calendar_item|
@@ -40,7 +40,7 @@ class GoogleCalendarImportService
 
   # Creates or updates an event in the database
   def create_or_update_event(event_item, calendar)
-    Event.find_or_create_by(google_id: event_item['id'], calendar: calendar) do |event|
+    Event.find_or_create_by(google_id: event_item['id'], calendar:) do |event|
       event.summary     = event_item['summary']
       event.description = event_item['description']
       event.start_time  = event_item.dig('start', 'dateTime') || event_item.dig('start', 'date')

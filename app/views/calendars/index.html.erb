@@ -35,5 +35,5 @@
     <p>No calendars or events found.</p>
   <% end %>
 <% else %>
-  <%= button_to 'Connect with Google', google_login_path, method: :get, class: 'button' %>
+  <%= link_to 'Connect with Google', google_login_path, class: 'button' %>
 <% end %>
